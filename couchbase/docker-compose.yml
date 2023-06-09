@@ -23,15 +23,21 @@ services:
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
       - KAFKA_LOG_DIRS=/var/lib/kafka/data
 
+
   kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
       - 8080:8080
+    depends_on:
+      - kafka
+      - kafka-connect
     environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: first
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://kafka-connect:8083
       DYNAMIC_CONFIG_ENABLED: 'true'
-    volumes:
-      - ./kafkaui-config/config.yml:/etc/kafkaui/dynamic_config.yaml
 
   kafka-connect:
     image: confluentinc/cp-kafka-connect
