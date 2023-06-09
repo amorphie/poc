@@ -1,0 +1,22 @@
+{
+  "name": "test-couchbase-source",
+  "config": {
+    "name": "test-couchbase-source",
+    "connector.class": "com.couchbase.connect.kafka.CouchbaseSourceConnector",
+    "tasks.max": "2",
+    "couchbase.topic": "test-default",
+    "couchbase.seed.nodes": "couchbase",
+    "couchbase.bootstrap.timeout": "10s",
+    "couchbase.bucket": "default",
+    "couchbase.username": "admin",
+    "couchbase.password": "password",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "couchbase.source.handler": "com.couchbase.connect.kafka.handler.source.RawJsonSourceHandler",
+    "value.converter": "org.apache.kafka.connect.converters.ByteArrayConverter",
+    "couchbase.event.filter": "com.couchbase.connect.kafka.filter.AllPassFilter",
+    "couchbase.stream.from": "SAVED_OFFSET_OR_BEGINNING",
+    "couchbase.compression": "ENABLED",
+    "couchbase.flow.control.buffer": "16m",
+    "couchbase.persistence.polling.interval": "100ms"
+  }
+}
