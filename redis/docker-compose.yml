@@ -23,7 +23,6 @@ services:
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
       - KAFKA_LOG_DIRS=/var/lib/kafka/data
 
-
   kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
@@ -62,24 +61,24 @@ services:
       - CONNECT_INTERNAL_KEY_CONVERTER=org.apache.kafka.connect.json.JsonConverter
       - CONNECT_INTERNAL_VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
     volumes:
-      - ./connect-configs:/etc/kafka/connect
+      - ./connect-configs/redis-sink.properties:/etc/kafka/connect
     command: 
       - bash
       - -c
       - |
-        confluent-hub install --no-prompt couchbase/kafka-connect-couchbase:4.1.12 \
-        && confluent-hub install --no-prompt redis/redis-enterprise-kafka:6.7.4 \
+        confluent-hub install --no-prompt jcustenborder/kafka-connect-redis:0.0.4 \
         && /etc/confluent/docker/run
-        && confluent local services connect connector load test-couchbase-source --config /etc/kafka/connect/quickstart-couchbase-source.properties \
-        && confluent local services connect connector load test-couchbase-sink --config /etc/kafka/connect/quickstart-couchbase-sink.properties
 
-
-  couchbase:
-    image: couchbase/server
-    container_name: couchbase
+  redis:
+    container_name: redis
+    image: redislabs/redismod
+    restart: always
     ports:
-      - "8091-8094:8091-8094"
-      - "11210:11210"
-    environment:
-      - COUCHBASE_ADMINISTRATOR_USERNAME=admin
-      - COUCHBASE_ADMINISTRATOR_PASSWORD=password
+      - '6379:6379'
+
+  redisinsight:
+    container_name: red-insight
+    image: redislabs/redisinsight:latest
+    ports:
+      - '5501:8001'
+    restart: unless-stopped
