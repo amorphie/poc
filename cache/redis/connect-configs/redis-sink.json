@@ -10,7 +10,6 @@
       "internal.key.converter": "org.apache.kafka.connect.storage.StringConverter",
       "value.converter": "org.apache.kafka.connect.storage.StringConverter",
       "internal.value.converter": "org.apache.kafka.connect.storage.StringConverter",
-      "plugin.path": "/usr/share/local-connectors",
       "topics.regex": "cache.(.*)"
   }
 }
