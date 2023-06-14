@@ -1,3 +1,12 @@
+
+@hostname=localhost
+@port=8083
+@host={{hostname}}:{{port}}
+
+### Create Sink Connector
+POST http://{{host}}/connectors HTTP/1.1
+Content-Type: application/json
+
 {
   "name": "redis-sink",
   "config": {
@@ -13,3 +22,5 @@
       "topics.regex": "cache.(.*)"
   }
 }
+
+###
