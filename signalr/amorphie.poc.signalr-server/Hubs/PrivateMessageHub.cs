@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using amorphie.poc.signalr_server.Model;
 using Microsoft.AspNetCore.SignalR;
 
@@ -22,4 +23,5 @@ namespace amorphie.poc.signalr_server.Hubs;
 */
 
     }
+
 
