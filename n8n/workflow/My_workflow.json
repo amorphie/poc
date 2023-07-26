@@ -1,0 +1,66 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "topic": "topic-n8n",
+        "groupId": "topic-n8n-1",
+        "options": {
+          "allowAutoTopicCreation": false
+        }
+      },
+      "id": "ab2349af-fe3a-4942-8505-413e6d7db8bb",
+      "name": "Kafka Trigger",
+      "type": "n8n-nodes-base.kafkaTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        420
+      ],
+      "credentials": {
+        "kafka": {
+          "id": "iPPggcY3EdZkhiqE",
+          "name": "kafka-n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://reqres.in/api/users/{{ $json.topic.Id }}",
+        "options": {}
+      },
+      "id": "0001754d-8b69-418b-af56-217c932a6e64",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1100,
+        420
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Kafka Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9284a584-05db-4d3e-b5a9-afeab2e5f337",
+  "id": "wzUeGFTEX8oKtJRh",
+  "meta": {
+    "instanceId": "8b262d7a1d020ff1d37743b8feb5e5e7bc24ec7da1fbad49bf466bb2e431c34a"
+  },
+  "tags": []
+}
