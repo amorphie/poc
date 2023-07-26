@@ -1,0 +1,45 @@
+@startuml
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+table(token){
+    primary_key( id ): UUID
+    foreign_key( consentId ): UUID <<FK>>
+    column(token): CHARACTER VARYING
+    column(tokenType):INTEGER
+    column(expireTime):INTEGER
+}
+
+table(consent){
+    primary_key( id ): UUID
+    foreign_key(consentDefinitionId ): UUID <<FK>> NULL
+    column(userId):UUID
+    column(state) : INTEGER
+    column(consentType) : INTEGER
+    column(additionalData) : CHARACTER VARYING
+}
+
+table(consentPermission){
+    primary_key( id ): UUID
+    foreign_key(consentId ): UUID <<FK>>
+    column(permission) : CHARACTER VARYING
+}
+
+consentPermission }|--|| consent
+
+token }|--|| consent
+
+table(consentDefinition){
+    primary_key( id ): UUID
+    column(name):CHARACTER VARYING
+    column(roleAssignment):CHARACTER VARYING
+    column(scope):CHARACTER VARYING []
+    column(clientId):CHARACTER VARYING []
+}
+
+consent }|--|| consentDefinition
+
+
+@enduml
