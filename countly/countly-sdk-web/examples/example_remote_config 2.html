@@ -1,0 +1,62 @@
+<html>
+
+<head>
+    <!-- Page styling here -->
+    <link rel='stylesheet' type='text/css' href='./style/style.css'>
+
+    <!--Countly script-->
+    <script type='text/javascript' src='../lib/countly.js'></script>
+    <script type='text/javascript'>
+
+        //initializing countly with params and remote config
+        Countly.init({
+            app_key: "YOUR_APP_KEY",
+            url: "https://try.count.ly", //your server goes here
+            debug: true,
+            rc_automatic_optin_for_ab: true, // set it to false for not opting in users for AB testing while fetching the remote config (only with latest API)
+            use_explicit_rc_api: false, // set it to true to use the latest API
+            remote_config: function (err, configs) {
+                //handle initial remote configs here
+                console.log(err, configs);
+            }
+        })
+    </script>
+</head>
+
+<body>
+    <!-- Header, banner etc. Top part of your site  -->
+    <div id="header">
+        <h1>Remote Config</h1>
+        <img id="logo" src="./images/logo.png">
+    </div>
+
+    <center>
+        <img src="./images/team_countly.jpg" id="wallpaper" />
+        <br />
+        <input type="button" onclick="fetchConfig()" value="Fetch Config">
+        <input type="button" onclick="getConfig()" value="Get Config">
+        <input type="button" onclick="getConfig('test')" value="Get config for key Test">
+        <input type="button" onclick="ab(['key1','key2'])" value="Enroll user to AB test">
+        <p><a href='https://countly.com/'>Countly</a></p>
+    </center>
+    <script type='text/javascript'>
+        // fetches all keys
+        function fetchConfig() {
+            Countly.fetch_remote_config(function (err, config) {
+                alert(JSON.stringify(config));
+            });
+        }
+
+        // enroll user
+        function ab(keyArray) {
+            Countly.enrollUserToAb(keyArray);
+        }
+
+        //get config
+        function getConfig(key) {
+            alert(JSON.stringify(Countly.get_remote_config(key)));
+        }
+    </script>
+</body>
+
+</html>
