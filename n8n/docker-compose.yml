@@ -30,7 +30,6 @@ services:
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
       - KAFKA_LOG_DIRS=/var/lib/kafka/data
 
-
   kafka-ui-n8n:
     image: provectuslabs/kafka-ui:latest
     ports:
@@ -77,3 +76,37 @@ services:
         && /etc/confluent/docker/run
         && confluent local services connect connector load test-couchbase-source --config /etc/kafka/connect/quickstart-couchbase-source.properties \
         && confluent local services connect connector load test-couchbase-sink --config /etc/kafka/connect/quickstart-couchbase-sink.properties
+
+  redis-n8n:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+
+  redisinsight-n8n:
+    image: redislabs/redisinsight:latest
+    ports:
+      - '5501:8001'
+    restart: unless-stopped
+
+  postgres-n8n:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  pgadmin-n8n:
+    container_name: bbt-template-pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "info@info.com"
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5502:80"
+    restart: unless-stopped

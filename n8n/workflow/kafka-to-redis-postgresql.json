@@ -1,0 +1,237 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "topic": "topic-n8n",
+        "groupId": "=topic-n8n-1",
+        "options": {
+          "allowAutoTopicCreation": true,
+          "jsonParseMessage": "={{ true }}",
+          "parallelProcessing": true
+        }
+      },
+      "id": "ab2349af-fe3a-4942-8505-413e6d7db8bb",
+      "name": "Kafka Trigger",
+      "type": "n8n-nodes-base.kafkaTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        360,
+        200
+      ],
+      "credentials": {
+        "kafka": {
+          "id": "iPPggcY3EdZkhiqE",
+          "name": "kafka-n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://reqres.in/api/users/{{ $json.message.Id }}",
+        "options": {}
+      },
+      "id": "0001754d-8b69-418b-af56-217c932a6e64",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        620,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": "={{ true }}",
+        "values": {
+          "string": [
+            {
+              "name": "IdFromKafka",
+              "value": "={{ $('Kafka Trigger').item.json.message.Id }}"
+            },
+            {
+              "name": "NameFromHTTP",
+              "value": "={{ $json.data.first_name }} {{ $json.data.last_name }}"
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": false
+        }
+      },
+      "id": "0a798b50-f5b7-4f14-bec5-7e1a85962570",
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        880,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "user",
+          "mode": "list",
+          "cachedResultName": "user"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Id": "={{ $json.IdFromKafka }}",
+            "NameSurname": "={{ $json.NameFromHTTP }}"
+          },
+          "matchingColumns": [
+            "Id"
+          ],
+          "schema": [
+            {
+              "id": "Id",
+              "displayName": "Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "NameSurname",
+              "displayName": "NameSurname",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f515ce37-bf56-48c5-94e6-e719276d87fa",
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.2,
+      "position": [
+        1220,
+        100
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "CMDU3CPCQOKrfDs2",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "={{ $json.IdFromKafka }}",
+        "value": "={{ $json }}",
+        "expire": true,
+        "ttl": 120
+      },
+      "id": "b5486fe8-58ee-4dda-a526-20f783aa6c15",
+      "name": "Redis",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        320
+      ],
+      "credentials": {
+        "redis": {
+          "id": "HHufYNzSgHlK6pM6",
+          "name": "Redis account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Kafka Trigger": [
+      {
+        "json": {
+          "message": {
+            "Id": "1"
+          },
+          "topic": "topic-n8n"
+        }
+      }
+    ],
+    "HTTP Request": [
+      {
+        "json": {
+          "data": {
+            "id": 2,
+            "email": "janet.weaver@reqres.in",
+            "first_name": "Janet",
+            "last_name": "Weaver",
+            "avatar": "https://reqres.in/img/faces/2-image.jpg"
+          },
+          "support": {
+            "url": "https://reqres.in/#support-heading",
+            "text": "To keep ReqRes free, contributions towards server costs are appreciated!"
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Kafka Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Redis",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5f27cf18-e103-417f-8184-835951d3fbe4",
+  "id": "wzUeGFTEX8oKtJRh",
+  "meta": {
+    "instanceId": "8b262d7a1d020ff1d37743b8feb5e5e7bc24ec7da1fbad49bf466bb2e431c34a"
+  },
+  "tags": []
+}
