@@ -1,6 +1,6 @@
 ## Project Description:
 
-In this example, the project aims to simulate workflows using n8n. To run the project, you first need to bring up the components with the command docker-compose up. After ensuring the data is ready, you should restore the **"kafka-to-redis-postgresql.json"** workflow from the "workflow" folder in n8n.
+The project aims to simulate workflows using n8n. To run the project, you first need to bring up the components with the command docker-compose up. After ensuring the data is ready, you should restore the **"kafka-to-redis-postgresql.json"** workflow from the "workflow" folder in n8n.
 
 ## Workflow Overview:
 
