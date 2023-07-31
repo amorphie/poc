@@ -1,0 +1,387 @@
+{
+  "name": "Kafka-WaitConsent-If",
+  "nodes": [
+    {
+      "parameters": {
+        "topic": "topic-n8n",
+        "groupId": "=topic-n8n-2",
+        "options": {
+          "allowAutoTopicCreation": true,
+          "jsonParseMessage": "={{ true }}",
+          "parallelProcessing": true
+        }
+      },
+      "id": "c2f0804b-4779-45b4-9802-2778fa7a87e8",
+      "name": "Kafka Trigger",
+      "type": "n8n-nodes-base.kafkaTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -260,
+        -60
+      ],
+      "credentials": {
+        "kafka": {
+          "id": "iPPggcY3EdZkhiqE",
+          "name": "kafka-n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://reqres.in/api/users/{{ $json.message.Id }}",
+        "options": {}
+      },
+      "id": "854d8142-5d2b-457e-a007-1785c0f607ca",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        480,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": "={{ true }}",
+        "values": {
+          "string": [
+            {
+              "name": "IdFromKafka",
+              "value": "={{ $('Kafka Trigger').item.json.message.Id }}"
+            },
+            {
+              "name": "NameFromHTTP",
+              "value": "={{ $json.data.first_name }} {{ $json.data.last_name }}"
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": false
+        }
+      },
+      "id": "432293e4-17e0-4db8-ae0e-b9f1cba31696",
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        780,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "user",
+          "mode": "list",
+          "cachedResultName": "user"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Id": "={{ $json.IdFromKafka }}",
+            "NameSurname": "={{ $json.NameFromHTTP }}"
+          },
+          "matchingColumns": [
+            "Id"
+          ],
+          "schema": [
+            {
+              "id": "Id",
+              "displayName": "Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "NameSurname",
+              "displayName": "NameSurname",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "91741ab3-63f9-44cd-a075-9a71015c43c8",
+      "name": "Postgres",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.2,
+      "position": [
+        1180,
+        -140
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "CMDU3CPCQOKrfDs2",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "={{ $json.IdFromKafka }}",
+        "value": "={{ $json }}",
+        "expire": true,
+        "ttl": 120
+      },
+      "id": "91df438b-fa93-4b35-bea0-f79ebadd2aa9",
+      "name": "Redis",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        80
+      ],
+      "credentials": {
+        "redis": {
+          "id": "HHufYNzSgHlK6pM6",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "options": {}
+      },
+      "id": "68010162-2a18-4051-adf0-e461be9fcb65",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        260,
+        -60
+      ],
+      "webhookId": "ee44031e-c366-4635-b2d1-4e4d21a99474"
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "resumeUrl",
+              "value": "={{ $execution.resumeUrl }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "60ebbbe7-8489-4eb6-9dd8-4f50e5f25e54",
+      "name": "Set-Resume-Url",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "resumeUrl",
+              "value": "={{ $execution.resumeUrl }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bdbe2760-9cd8-4800-8990-66f26e77752a",
+      "name": "Set-Resume-Url1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        0,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "options": {}
+      },
+      "id": "8f237c89-7611-4d5b-a71b-78bb8ecd7d80",
+      "name": "Wait1",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        260,
+        200
+      ],
+      "webhookId": "239c5906-4315-46b4-94f2-2c5d55b62dbf"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $('Kafka Trigger').item.json.topic }}",
+              "value2": "topic-n8n1"
+            }
+          ]
+        }
+      },
+      "id": "30444185-92de-4239-8a75-4aad8a378127",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        500,
+        200
+      ]
+    }
+  ],
+  "pinData": {
+    "Kafka Trigger": [
+      {
+        "json": {
+          "message": {
+            "Id": "1"
+          },
+          "topic": "topic-n8n"
+        }
+      }
+    ],
+    "HTTP Request": [
+      {
+        "json": {
+          "data": {
+            "id": 2,
+            "email": "janet.weaver@reqres.in",
+            "first_name": "Janet",
+            "last_name": "Weaver",
+            "avatar": "https://reqres.in/img/faces/2-image.jpg"
+          },
+          "support": {
+            "url": "https://reqres.in/#support-heading",
+            "text": "To keep ReqRes free, contributions towards server costs are appreciated!"
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Kafka Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set-Resume-Url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Set-Resume-Url1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Redis",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set-Resume-Url": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set-Resume-Url1": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "fbc23b06-4167-4daf-81ff-fad0649eea5b",
+  "id": "hH4cPfDeco7KrH7Y",
+  "meta": {
+    "instanceId": "8b262d7a1d020ff1d37743b8feb5e5e7bc24ec7da1fbad49bf466bb2e431c34a"
+  },
+  "tags": []
+}

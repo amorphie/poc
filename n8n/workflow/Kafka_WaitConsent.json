@@ -1,23 +1,23 @@
 {
-  "name": "My workflow",
+  "name": "Kafka-WaitConsent",
   "nodes": [
     {
       "parameters": {
         "topic": "topic-n8n",
-        "groupId": "=topic-n8n-1",
+        "groupId": "=topic-n8n-2",
         "options": {
           "allowAutoTopicCreation": true,
           "jsonParseMessage": "={{ true }}",
           "parallelProcessing": true
         }
       },
-      "id": "ab2349af-fe3a-4942-8505-413e6d7db8bb",
+      "id": "420cc041-f75c-4eb9-a55a-cfd7f6ed6542",
       "name": "Kafka Trigger",
       "type": "n8n-nodes-base.kafkaTrigger",
       "typeVersion": 1.1,
       "position": [
-        360,
-        200
+        -300,
+        -60
       ],
       "credentials": {
         "kafka": {
@@ -31,13 +31,13 @@
         "url": "=https://reqres.in/api/users/{{ $json.message.Id }}",
         "options": {}
       },
-      "id": "0001754d-8b69-418b-af56-217c932a6e64",
+      "id": "310fb0e0-a923-4576-bbb8-f4a97b629cfb",
       "name": "HTTP Request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        620,
-        200
+        480,
+        -60
       ]
     },
     {
@@ -59,12 +59,12 @@
           "dotNotation": false
         }
       },
-      "id": "0a798b50-f5b7-4f14-bec5-7e1a85962570",
+      "id": "424c671a-40a4-4677-b476-127455102683",
       "name": "Set",
       "type": "n8n-nodes-base.set",
       "typeVersion": 2,
       "position": [
-        880,
+        480,
         200
       ]
     },
@@ -116,7 +116,7 @@
         },
         "options": {}
       },
-      "id": "f515ce37-bf56-48c5-94e6-e719276d87fa",
+      "id": "4696867f-6db1-4d06-8221-67b3b2224927",
       "name": "Postgres",
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.2,
@@ -139,7 +139,7 @@
         "expire": true,
         "ttl": 120
       },
-      "id": "b5486fe8-58ee-4dda-a526-20f783aa6c15",
+      "id": "c7b9bf1d-7ac6-4e33-9b33-d7e329080870",
       "name": "Redis",
       "type": "n8n-nodes-base.redis",
       "typeVersion": 1,
@@ -153,6 +153,78 @@
           "name": "Redis account"
         }
       }
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "options": {}
+      },
+      "id": "bed237a6-865a-4e18-a3a4-a1163e713bac",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        260,
+        -60
+      ],
+      "webhookId": "bc4417a1-4a34-424b-8b71-e51c6d43e6f9"
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "resumeUrl",
+              "value": "={{ $execution.resumeUrl }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5da95184-d017-448e-8a47-5d2abb944c6b",
+      "name": "Set-Resume-Url",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "resumeUrl",
+              "value": "={{ $execution.resumeUrl }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "06945940-43a7-46fd-a1e1-6d2f585998d2",
+      "name": "Set-Resume-Url1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        0,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "options": {}
+      },
+      "id": "baec7440-3e39-45f7-8598-ddb976be7f9c",
+      "name": "Wait1",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        260,
+        200
+      ],
+      "webhookId": "bc4417a1-4a34-424b-8b71-e51c6d43e6f9"
     }
   ],
   "pinData": {
@@ -189,7 +261,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Set-Resume-Url",
             "type": "main",
             "index": 0
           }
@@ -200,7 +272,7 @@
       "main": [
         [
           {
-            "node": "Set",
+            "node": "Set-Resume-Url1",
             "type": "main",
             "index": 0
           }
@@ -222,14 +294,61 @@
           }
         ]
       ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set-Resume-Url": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set-Resume-Url1": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "active": true,
+  "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "5f27cf18-e103-417f-8184-835951d3fbe4",
-  "id": "wzUeGFTEX8oKtJRh",
+  "versionId": "b068d6c7-5d32-4298-a762-7d1ce3117b78",
+  "id": "Nk1avVXglSuJnuN1",
   "meta": {
     "instanceId": "8b262d7a1d020ff1d37743b8feb5e5e7bc24ec7da1fbad49bf466bb2e431c34a"
   },
