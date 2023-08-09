@@ -4,7 +4,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://test-incomingsms.burgan.com.tr/save",
+        "url": "xxxxxxxxx",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
