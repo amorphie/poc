@@ -1,0 +1,478 @@
+{
+  "name": "CodecWebhookwithGuid",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://test-incomingsms.burgan.com.tr/save",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "="
+            },
+            {
+              "name": "=message",
+              "value": "={{ $('Webhook').item.json.headers.brand }} - IPTAL"
+            },
+            {
+              "name": "senderNumber",
+              "value": "={{ $json.Msisdn }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2f6a167b-ceff-4ff2-907f-6e0341028f01",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        700,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"SplitInBatches\"].context[\"noItemsLeft\"]}}"
+            }
+          ]
+        }
+      },
+      "id": "abfaa584-d04f-46e7-8295-4339fd9d656c",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": "=2",
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "75938c96-6f1c-416c-8d76-95f5df17776d",
+      "name": "SplitInBatches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 2,
+      "position": [
+        -260,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "940c7f17-7016-4104-bada-464a37e0a5bc",
+        "options": {
+          "rawBody": false
+        }
+      },
+      "id": "5b88eedd-4fb5-49f9-b041-c477d798e891",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -1020,
+        460
+      ],
+      "webhookId": "ac629204-5dd5-431b-b407-ba1ca2128606"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "36d08def-411f-48ed-aa0f-555b70bc9329",
+      "name": "FormatData",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -780,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "CodecPermission",
+          "mode": "list",
+          "cachedResultName": "CodecPermission"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Msidn": "={{ $json.Msisdn }}",
+            "Message": "={{ $('Webhook').item.json.headers.brand }} - Iptal"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Id",
+              "displayName": "Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Msidn",
+              "displayName": "Msidn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "26972428-1cef-42ae-bfc1-b9ec67835e7f",
+      "name": "Postgres1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.2,
+      "position": [
+        760,
+        -20
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "CMDU3CPCQOKrfDs2",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.Id = uuidv4();\n}\n\nfunction uuidv4() {\n    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'\n    .replace(/[xy]/g, function (c) {\n        const r = Math.random() * 16 | 0, \n            v = c == 'x' ? r : (r & 0x3 | 0x8);\n        return v.toString(16);\n    });\n}\n\n\nreturn $input.all();"
+      },
+      "id": "8d9fc937-983e-4e4a-b71a-21272116ccb8",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -540,
+        460
+      ]
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "brand": "On",
+            "content-type": "text/plain",
+            "user-agent": "PostmanRuntime/7.32.3",
+            "accept": "*/*",
+            "postman-token": "c338e51e-9eaf-4a32-aac9-741769bdefa1",
+            "host": "localhost:5678",
+            "accept-encoding": "gzip, deflate, br",
+            "connection": "keep-alive",
+            "content-length": "749"
+          },
+          "params": {},
+          "query": {},
+          "body": [
+            {
+              "Msisdn": "00905418642533",
+              "Status": 1,
+              "PermDate": "2015-08-07T15:40:00.92",
+              "ConsentType": "MESAJ",
+              "PermSource": 1,
+              "ConsentSource": "HS_MESAJ",
+              "RecipientType": "BIREYSEL",
+              "IysTransferStatus": 100,
+              "IysTransferErrorCode": "H178",
+              "RetailerCode": null,
+              "RetailerAccessCount": 0,
+              "RetailerAccess": null
+            },
+            {
+              "Msisdn": "00905549851941",
+              "Status": 1,
+              "PermDate": "2015-08-07T15:56:05.523",
+              "ConsentType": "MESAJ",
+              "PermSource": 1,
+              "ConsentSource": "IYS_WEB",
+              "RecipientType": "BIREYSEL",
+              "IysTransferStatus": 100,
+              "IysTransferErrorCode": "H178",
+              "RetailerCode": 58795354,
+              "RetailerAccessCount": 2,
+              "RetailerAccess": "30143398,45678910"
+            },
+            {
+              "Msisdn": "00905418642533",
+              "Status": 1,
+              "PermDate": "2015-08-07T15:40:00.92",
+              "ConsentType": "MESAJ",
+              "PermSource": 1,
+              "ConsentSource": "HS_MESAJ",
+              "RecipientType": "BIREYSEL",
+              "IysTransferStatus": 100,
+              "IysTransferErrorCode": "H178",
+              "RetailerCode": null,
+              "RetailerAccessCount": 0,
+              "RetailerAccess": null
+            },
+            {
+              "Msisdn": "00905549851941",
+              "Status": 1,
+              "PermDate": "2015-08-07T15:56:05.523",
+              "ConsentType": "MESAJ",
+              "PermSource": 1,
+              "ConsentSource": "IYS_WEB",
+              "RecipientType": "BIREYSEL",
+              "IysTransferStatus": 100,
+              "IysTransferErrorCode": "H178",
+              "RetailerCode": 58795354,
+              "RetailerAccessCount": 2,
+              "RetailerAccess": "30143398,45678910"
+            },
+            {
+              "Msisdn": "00905418642533",
+              "Status": 1,
+              "PermDate": "2015-08-07T15:40:00.92",
+              "ConsentType": "MESAJ",
+              "PermSource": 1,
+              "ConsentSource": "HS_MESAJ",
+              "RecipientType": "BIREYSEL",
+              "IysTransferStatus": 100,
+              "IysTransferErrorCode": "H178",
+              "RetailerCode": null,
+              "RetailerAccessCount": 0,
+              "RetailerAccess": null
+            },
+            {
+              "Msisdn": "00905549851941",
+              "Status": 1,
+              "PermDate": "2015-08-07T15:56:05.523",
+              "ConsentType": "MESAJ",
+              "PermSource": 1,
+              "ConsentSource": "IYS_WEB",
+              "RecipientType": "BIREYSEL",
+              "IysTransferStatus": 100,
+              "IysTransferErrorCode": "H178",
+              "RetailerCode": 58795354,
+              "RetailerAccessCount": 2,
+              "RetailerAccess": "30143398,45678910"
+            }
+          ]
+        }
+      }
+    ],
+    "FormatData": [
+      {
+        "json": {
+          "Msisdn": "00905418642533",
+          "Status": 1,
+          "PermDate": "2015-08-07T15:40:00.92",
+          "ConsentType": "MESAJ",
+          "PermSource": 1,
+          "ConsentSource": "HS_MESAJ",
+          "RecipientType": "BIREYSEL",
+          "IysTransferStatus": 100,
+          "IysTransferErrorCode": "H178",
+          "RetailerCode": null,
+          "RetailerAccessCount": 0,
+          "RetailerAccess": null
+        }
+      },
+      {
+        "json": {
+          "Msisdn": "00905549851941",
+          "Status": 1,
+          "PermDate": "2015-08-07T15:56:05.523",
+          "ConsentType": "MESAJ",
+          "PermSource": 1,
+          "ConsentSource": "IYS_WEB",
+          "RecipientType": "BIREYSEL",
+          "IysTransferStatus": 100,
+          "IysTransferErrorCode": "H178",
+          "RetailerCode": 58795354,
+          "RetailerAccessCount": 2,
+          "RetailerAccess": "30143398,45678910"
+        }
+      },
+      {
+        "json": {
+          "Msisdn": "00905418642533",
+          "Status": 1,
+          "PermDate": "2015-08-07T15:40:00.92",
+          "ConsentType": "MESAJ",
+          "PermSource": 1,
+          "ConsentSource": "HS_MESAJ",
+          "RecipientType": "BIREYSEL",
+          "IysTransferStatus": 100,
+          "IysTransferErrorCode": "H178",
+          "RetailerCode": null,
+          "RetailerAccessCount": 0,
+          "RetailerAccess": null
+        }
+      },
+      {
+        "json": {
+          "Msisdn": "00905549851941",
+          "Status": 1,
+          "PermDate": "2015-08-07T15:56:05.523",
+          "ConsentType": "MESAJ",
+          "PermSource": 1,
+          "ConsentSource": "IYS_WEB",
+          "RecipientType": "BIREYSEL",
+          "IysTransferStatus": 100,
+          "IysTransferErrorCode": "H178",
+          "RetailerCode": 58795354,
+          "RetailerAccessCount": 2,
+          "RetailerAccess": "30143398,45678910"
+        }
+      },
+      {
+        "json": {
+          "Msisdn": "00905418642533",
+          "Status": 1,
+          "PermDate": "2015-08-07T15:40:00.92",
+          "ConsentType": "MESAJ",
+          "PermSource": 1,
+          "ConsentSource": "HS_MESAJ",
+          "RecipientType": "BIREYSEL",
+          "IysTransferStatus": 100,
+          "IysTransferErrorCode": "H178",
+          "RetailerCode": null,
+          "RetailerAccessCount": 0,
+          "RetailerAccess": null
+        }
+      },
+      {
+        "json": {
+          "Msisdn": "00905549851941",
+          "Status": 1,
+          "PermDate": "2015-08-07T15:56:05.523",
+          "ConsentType": "MESAJ",
+          "PermSource": 1,
+          "ConsentSource": "IYS_WEB",
+          "RecipientType": "BIREYSEL",
+          "IysTransferStatus": 100,
+          "IysTransferErrorCode": "H178",
+          "RetailerCode": 58795354,
+          "RetailerAccessCount": 2,
+          "RetailerAccess": "30143398,45678910"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [],
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SplitInBatches": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "FormatData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FormatData": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "bbZOE0QHoRv7IGWc"
+  },
+  "versionId": "30eaa51c-619c-490a-ae7f-0aa35cca51d8",
+  "id": "GOa3VTh8yz7NJ6qd",
+  "meta": {
+    "instanceId": "8b262d7a1d020ff1d37743b8feb5e5e7bc24ec7da1fbad49bf466bb2e431c34a"
+  },
+  "tags": []
+}
