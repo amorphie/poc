@@ -26,11 +26,6 @@
             "postDebugTask": "daprd-down-amorphie-poc-couchbase"
         },
         {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach"
-        },
-        {
             "name": "amorphie-poc-signalr-server",
             "type": "coreclr",
             "request": "launch",
