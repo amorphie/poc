@@ -1,8 +1,21 @@
-version: "3"
+version: '3.8'
 
 services:
+  
+  apisix-dashboard:
+    image: apache/apisix-dashboard:latest
+    restart: always
+    volumes:
+    - ./config/dashboard-config.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
+    depends_on:
+    - etcd
+    ports:
+    - "9000:9000"
+    networks:
+      - apisix
+        
   keycloak:
-    image: quay.io/keycloak/keycloak:18.0.2
+    image: quay.io/keycloak/keycloak:latest
     command:
       - start-dev
     environment:
@@ -10,33 +23,39 @@ services:
      - KEYCLOAK_ADMIN_PASSWORD=admin
     ports:
       - "8080:8080"
+    networks:
+      - apisix
     
   apisix:
-    image: apache/apisix:${APISIX_IMAGE_TAG:-3.4.0-debian}
+    image: apache/apisix:latest
     restart: always
     volumes:
-      - ./config/config.yml:/usr/local/apisix/conf/config.yaml:ro
-      - ./config/apisix.yml:/usr/local/apisix/conf/apisix.yaml:ro
+      - ./config/config.yaml:/usr/local/apisix/conf/config.yaml:ro
     depends_on:
       - etcd
-    ##network_mode: host
     ports:
       - "9180:9180/tcp"
       - "9080:9080/tcp"
       - "9091:9091/tcp"
       - "9443:9443/tcp"
-      - "9092:9092/tcp"
+    networks:
+      - apisix
 
   etcd:
-    image: bitnami/etcd:3.4.15
+    image: bitnami/etcd:3.4.9
+    user: root
     restart: always
     environment:
+      ETCD_DATA_DIR: /etcd_data
       ETCD_ENABLE_V2: "true"
       ALLOW_NONE_AUTHENTICATION: "yes"
       ETCD_ADVERTISE_CLIENT_URLS: "http://etcd:2379"
       ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
     ports:
       - "2379:2379/tcp"
+    networks:
+      - apisix
 
-  httpbin:
-    image: kennethreitz/httpbin
+networks:
+  apisix:
+    driver: bridge
