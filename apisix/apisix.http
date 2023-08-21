@@ -1,11 +1,10 @@
-POST http://127.0.0.1:9080/apisix/admin/routes HTTP/1.1
-
-content-type: application/json
-
-X-Api-Key: edd1c9f034335f136f87ad84b625c8f1
+PUT /apisix/admin/routes/secure HTTP/1.1
+Host: 127.0.0.1:9180
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+Content-Type: text/plain
 
 {
-    "uri":"/*",
+    "uri":"/secure",
     "plugins":{
         "openid-connect":{
             "client_id":"apisix-client",
@@ -27,14 +26,34 @@ X-Api-Key: edd1c9f034335f136f87ad84b625c8f1
 }
 
 ###
-PUT http://127.0.0.1:9180/apisix/admin/routes
+PUT /apisix/admin/routes/url_rewrite HTTP/1.1
+Host: 127.0.0.1:9180
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+Content-Type: text/plain
+
 {
-  "id": "getting-started-ip",
-  "uri": "/ip",
-  "upstream": {
-    "type": "roundrobin",
-    "nodes": {
-      "httpbin.org:80": 1
-    }
-  }
+    "uri": "/ip",
+    "plugins": {
+        "proxy-rewrite": {
+            "uri": "/anything?param=$http_speakerId"
+        },
+        "serverless-pre-function": {
+            "functions": [
+                "return function(conf, ctx) local core = require(\"apisix.core\")  core.request.set_header(ctx, \"speakerId\", 1) end"
+            ],
+            "phase": "rewrite"
+        }
+    },
+    "upstream": {
+        "nodes": [
+            {
+                "host": "host.docker.internal",
+                "port": 80,
+                "weight": 1
+            }
+        ],
+        "type": "roundrobin"
+    },
+    "status": 1
 }
+###

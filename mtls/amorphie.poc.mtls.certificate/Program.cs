@@ -8,13 +8,13 @@ string certPassword = "certificate_password";
 // Generate a self-signed certificate
 X509Certificate2 certificate = GenerateSelfSignedCertificate();
 
-SignSample();
+// SignSample();
 
 // EncryptSample();
 
 // ExportPEMSample();
 
-// SaveSample();
+SaveSample();
 
 Console.ReadLine();
 
@@ -164,16 +164,55 @@ X509Certificate2 GenerateSelfSignedCertificate()
 {
     using (RSA rsa = RSA.Create(2048))
     {
-        var request = new CertificateRequest("CN=MySelfSignedCert", rsa, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-        request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.DataEncipherment | X509KeyUsageFlags.KeyEncipherment | X509KeyUsageFlags.DigitalSignature, false));
+        var request = new CertificateRequest("CN=localhost", rsa, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
 
-        request.CertificateExtensions.Add(new X509EnhancedKeyUsageExtension(new OidCollection { new Oid("1.3.6.1.5.5.7.3.1") }, false));
+        request.CertificateExtensions.Add(
+            new X509BasicConstraintsExtension(
+                certificateAuthority: false,
+                hasPathLengthConstraint: false,
+                pathLengthConstraint: 0,
+                critical: true
+            )
+        );
+
+        request.CertificateExtensions.Add(
+            new X509KeyUsageExtension(
+                keyUsages:
+                    X509KeyUsageFlags.DigitalSignature
+                    | X509KeyUsageFlags.KeyEncipherment,
+                critical: false
+            )
+        );
+
+        request.CertificateExtensions.Add(
+            new X509SubjectKeyIdentifierExtension(
+                key: request.PublicKey,
+                critical: false
+            )
+        );
+
+        request.CertificateExtensions.Add(
+            new X509EnhancedKeyUsageExtension(
+                new OidCollection {
+                    new Oid("1.3.6.1.5.5.7.3.1")
+                    },
+                    false));
+
 
         var notBefore = DateTime.UtcNow;
         var notAfter = notBefore.AddYears(1);
         X509Certificate2 certificate = request.CreateSelfSigned(notBefore, notAfter);
 
-        return certificate;
+
+
+        // return certificate;
+
+        // Export certificate with private key
+        return new X509Certificate2(
+            certificate.Export(X509ContentType.Cert),
+            (string)null,
+            X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet
+        ).CopyWithPrivateKey(rsa);
     }
 }
 
