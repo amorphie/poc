@@ -56,6 +56,14 @@ services:
     networks:
       - apisix
 
+  httpbin:
+    image: kennethreitz/httpbin
+    container_name: httpbin
+    ports:
+      - '80:80'
+    networks:
+      - apisix
+    
 networks:
   apisix:
     driver: bridge

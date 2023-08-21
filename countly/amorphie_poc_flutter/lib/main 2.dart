@@ -68,7 +68,7 @@ final bool _enableManualSession = false;
   void initState() {
     super.initState();
 
-    String? DEVICE_ID = PlatformDeviceId.getDeviceId.toString();
+    String? deviceId = PlatformDeviceId.getDeviceId.toString();
 
   Countly.isInitialized().then((bool isInitialized) {
       if (!isInitialized) {
