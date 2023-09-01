@@ -21,14 +21,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/", async ([FromBody]Model model,[FromServices]DaprClient daprClient  ) =>
+app.MapPost("/", async([FromBody]Model model,[FromServices]DaprClient daprClient) =>
 {
-await daprClient.SaveStateAsync<Model>("state.couchbase",Guid.NewGuid().ToString(),model);
+    await daprClient.SaveStateAsync<Model>("state.couchbase", Guid.NewGuid().ToString(), model);
 })
 .WithName("AddNewRecord")
 .WithOpenApi();
 
-app.MapGet("/", async ([FromServices]DaprClient daprClient  ) =>
+app.MapGet("/", async([FromServices]DaprClient daprClient) =>
 {
     var query = "{" +
                 "\"filter\": {" +
@@ -42,7 +42,7 @@ app.MapGet("/", async ([FromServices]DaprClient daprClient  ) =>
                 "]" +
             "}";
 
-return  await daprClient.QueryStateAsync<Model>("state.couchbase",query);
+    return await daprClient.QueryStateAsync<Model>("state.couchbase", query);
 })
 .WithName("GetAllRecord")
 .WithOpenApi();
@@ -50,4 +50,4 @@ return  await daprClient.QueryStateAsync<Model>("state.couchbase",query);
 
 app.Run();
 
-record Model(string key,string value);
+record Model(string key, string value);
