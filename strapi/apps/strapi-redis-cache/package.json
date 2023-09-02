@@ -13,7 +13,7 @@
     "@strapi/plugin-i18n": "4.12.6",
     "@strapi/plugin-users-permissions": "4.12.6",
     "@strapi/strapi": "4.12.6",
-    "pg": "8.8.0",
+    "pg": "8.11.2",
     "seed": "^0.4.4",
     "strapi-plugin-redis": "^1.0.1",
     "strapi-plugin-rest-cache": "^4.2.8",
