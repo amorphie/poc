@@ -1,0 +1,58 @@
+
+@hostname=localhost
+@port=8083
+@host={{hostname}}:{{port}}
+
+### Create Sink Connector
+POST http://{{host}}/connectors HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "test-couchbase-sink",
+  "config": {
+    "name": "test-couchbase-sink",
+    "connector.class": "com.couchbase.connect.kafka.CouchbaseSinkConnector",
+    "tasks.max": "2",
+    "topics": "test-default",
+    "couchbase.seed.nodes": "couchbase",
+    "couchbase.bootstrap.timeout": "10s",
+    "couchbase.bucket": "default",
+    "couchbase.username": "admin",
+    "couchbase.password": "password",
+    "couchbase.persist.to": "NONE",
+    "couchbase.replicate.to": "NONE",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false"
+  }
+}
+
+###
+
+### Create Source Connector
+POST http://{{host}}/connectors HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "test-couchbase-source",
+  "config": {
+    "name": "test-couchbase-source",
+    "connector.class": "com.couchbase.connect.kafka.CouchbaseSourceConnector",
+    "tasks.max": "2",
+    "couchbase.topic": "test-default",
+    "couchbase.seed.nodes": "couchbase",
+    "couchbase.bootstrap.timeout": "10s",
+    "couchbase.bucket": "default",
+    "couchbase.username": "admin",
+    "couchbase.password": "password",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "couchbase.source.handler": "com.couchbase.connect.kafka.handler.source.RawJsonSourceHandler",
+    "value.converter": "org.apache.kafka.connect.converters.ByteArrayConverter",
+    "couchbase.event.filter": "com.couchbase.connect.kafka.filter.AllPassFilter",
+    "couchbase.stream.from": "SAVED_OFFSET_OR_BEGINNING",
+    "couchbase.compression": "ENABLED",
+    "couchbase.flow.control.buffer": "16m",
+    "couchbase.persistence.polling.interval": "100ms"
+  }
+}
+###

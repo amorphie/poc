@@ -1,0 +1,331 @@
+{
+  "name": "CodecWebhook",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "xxxxxxxxxxxx",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "="
+            },
+            {
+              "name": "=message",
+              "value": "={{ $('Webhook').item.json.headers.brand }} - IPTAL"
+            },
+            {
+              "name": "senderNumber",
+              "value": "={{ $json.Msisdn }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7635c1ef-065c-4504-9269-deee40acb1db",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        40,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$node[\"SplitInBatches\"].context[\"noItemsLeft\"]}}"
+            }
+          ]
+        }
+      },
+      "id": "31d115da-7a1e-47a4-8439-b0070925a833",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        380,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": "=1",
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "1fc9426f-43e7-462f-baa7-f15e2db52772",
+      "name": "SplitInBatches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 2,
+      "position": [
+        -300,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "940c7f17-7016-4104-bada-464a37e0a5bc",
+        "options": {
+          "rawBody": false
+        }
+      },
+      "id": "6ba1732a-fbba-4d0a-93fd-0e8e6098a085",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -1020,
+        460
+      ],
+      "webhookId": "940c7f17-7016-4104-bada-464a37e0a5bc"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "4e1cd55d-e9df-494e-b246-1afc92d7cf24",
+      "name": "FormatData",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -660,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "CodecPermission",
+          "mode": "list",
+          "cachedResultName": "CodecPermission"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Msidn": "={{ $json.Msisdn }}",
+            "Message": "={{ $('Webhook').item.json.headers.brand }} - Iptal"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Id",
+              "displayName": "Id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Msidn",
+              "displayName": "Msidn",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ffe3b7be-20f3-4e11-a947-c7567252de12",
+      "name": "Postgres1",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.2,
+      "position": [
+        40,
+        260
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "CMDU3CPCQOKrfDs2",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "FormatData": [
+      {
+        "json": {
+          "Msisdn": "00905418642533",
+          "Status": 1,
+          "PermDate": "2015-08-07T15:40:00.92",
+          "ConsentType": "MESAJ",
+          "PermSource": 1,
+          "ConsentSource": "HS_MESAJ",
+          "RecipientType": "BIREYSEL",
+          "IysTransferStatus": 100,
+          "IysTransferErrorCode": "H178",
+          "RetailerCode": null,
+          "RetailerAccessCount": 0,
+          "RetailerAccess": null
+        }
+      },
+      {
+        "json": {
+          "Msisdn": "00905549851941",
+          "Status": 1,
+          "PermDate": "2015-08-07T15:56:05.523",
+          "ConsentType": "MESAJ",
+          "PermSource": 1,
+          "ConsentSource": "IYS_WEB",
+          "RecipientType": "BIREYSEL",
+          "IysTransferStatus": 100,
+          "IysTransferErrorCode": "H178",
+          "RetailerCode": 58795354,
+          "RetailerAccessCount": 2,
+          "RetailerAccess": "30143398,45678910"
+        }
+      }
+    ],
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "brand": "On",
+            "content-type": "text/plain",
+            "user-agent": "PostmanRuntime/7.32.3",
+            "accept": "*/*",
+            "postman-token": "c338e51e-9eaf-4a32-aac9-741769bdefa1",
+            "host": "localhost:5678",
+            "accept-encoding": "gzip, deflate, br",
+            "connection": "keep-alive",
+            "content-length": "749"
+          },
+          "params": {},
+          "query": {},
+          "body": [
+            {
+              "Msisdn": "00905418642533",
+              "Status": 1,
+              "PermDate": "2015-08-07T15:40:00.92",
+              "ConsentType": "MESAJ",
+              "PermSource": 1,
+              "ConsentSource": "HS_MESAJ",
+              "RecipientType": "BIREYSEL",
+              "IysTransferStatus": 100,
+              "IysTransferErrorCode": "H178",
+              "RetailerCode": null,
+              "RetailerAccessCount": 0,
+              "RetailerAccess": null
+            },
+            {
+              "Msisdn": "00905549851941",
+              "Status": 1,
+              "PermDate": "2015-08-07T15:56:05.523",
+              "ConsentType": "MESAJ",
+              "PermSource": 1,
+              "ConsentSource": "IYS_WEB",
+              "RecipientType": "BIREYSEL",
+              "IysTransferStatus": 100,
+              "IysTransferErrorCode": "H178",
+              "RetailerCode": 58795354,
+              "RetailerAccessCount": 2,
+              "RetailerAccess": "30143398,45678910"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "connections": {
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [],
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SplitInBatches": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "FormatData",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FormatData": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3aacc859-fe0d-4129-a754-9ef311616997",
+  "id": "byP4scsjvbWKCKi3",
+  "meta": {
+    "instanceId": "8b262d7a1d020ff1d37743b8feb5e5e7bc24ec7da1fbad49bf466bb2e431c34a"
+  },
+  "tags": []
+}

@@ -1,0 +1,15 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: state.couchbase
+spec:
+  type: state.couchbase
+  metadata:
+  - name: couchbaseURL
+    value: "http://localhost:8091"
+  - name: username
+    value: admin
+  - name: password
+    value: password
+  - name: bucketName
+    value: default
