@@ -5,4 +5,4 @@ using System.Threading.Tasks;
 
 namespace amorphie.poc.signalr_server.Model;
 
-    public record HubMessage(ChannelNameEnum ChannelNameEnum, ToEnum ToEnum, string? To,string Message);
+    public record HubMessage(ChannelNameEnum ChannelNameEnum, ToEnum ToEnum, string? To, string Message);
