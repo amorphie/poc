@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: test-apis
+  description: A collection of all test APIs for Backstage
+spec:
+  targets:
+#   - ./apis/test-api.yaml
+#    - ./apis/prod-api.yaml
+    - ./apis/tfs-api.yaml
+    - ./apis/dynamic-api.yaml
+    - ./apis/dynamic-api1.yaml

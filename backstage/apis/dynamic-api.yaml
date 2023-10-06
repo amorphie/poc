@@ -1,0 +1,13 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: api-name-dynamic
+  description: Dynamic APIs
+  tags:
+    - dynamic
+spec:
+  type: openapi
+  lifecycle: dynamic
+  owner: group:team-d
+  definition:
+    $text: https://xxxxxxxxx/swagger/v1/swagger.yaml
