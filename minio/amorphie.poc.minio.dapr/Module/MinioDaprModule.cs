@@ -14,7 +14,7 @@ public static class MinioDaprModule
     public static void AddRoutes(WebApplication app)
     {
 
-        app.MapGet("/dapr/getFileList", async ValueTask<IResult> (
+        app.MapGet("/dapr/getFileList", async ValueTask<IResult>(
             [FromServices] DaprClient daprClient) =>
         {
             /*
@@ -44,7 +44,7 @@ public static class MinioDaprModule
         });
 
 
-        app.MapGet("/dapr/getFile/{fileName}", async ValueTask<IResult> (
+        app.MapGet("/dapr/getFile/{fileName}", async ValueTask<IResult>(
             [FromServices] DaprClient daprClient,
             [FromRoute] string fileName) =>
         {
@@ -84,7 +84,7 @@ public static class MinioDaprModule
         }
 
 
-        app.MapPost("/dapr/putFile", async ValueTask<IResult> (
+        app.MapPost("/dapr/putFile", async ValueTask<IResult>(
             [FromServices] DaprClient daprClient,
             string fileName) =>
         {
@@ -105,7 +105,7 @@ public static class MinioDaprModule
             return Results.Ok(str);
         });
 
-        app.MapDelete("/dapr/{fileName}", async ValueTask<IResult> (
+        app.MapDelete("/dapr/{fileName}", async ValueTask<IResult>(
             [FromServices] DaprClient daprClient,
             [FromRoute] string fileName) =>
         {
