@@ -4,6 +4,16 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+            {
+                "name": "Docker Form-io Pupper Launch",
+                "type": "docker",
+                "request": "launch",
+                "preLaunchTask": "form-io-pupper-docker-run: debug",
+                "netCore": {
+                    "appProject": "${workspaceFolder}/form-io/server-validation/amorphie.poc.formio.pupper/amorphie.poc.formio.pupper.csproj"
+                }
+            }
+            ,
         {
             "name": "amorphie-poc-couchbase",
             "type": "coreclr",

@@ -80,7 +80,6 @@ app.MapPost("/validate-formio", async () =>
 
             // await page.SetContentAsync(htmlContent, new NavigationOptions { WaitUntil = new[] { WaitUntilNavigation.Networkidle2 } });
 
-
             var toCheckIsFormLoaded = await page.WaitForSelectorAsync("#formio");
 
             var VerifyAllPageLoaded = await page.WaitForFunctionAsync("()=> document.readyState === 'complete'");

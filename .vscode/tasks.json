@@ -1,6 +1,47 @@
 {
     "version": "2.0.0",
     "tasks": [
+                {
+                    "label": "build-form-io-pupper",
+                    "command": "dotnet",
+                    "type": "process",
+                    "args": [
+                        "build",
+                        "${workspaceFolder}/form-io/server-validation/amorphie.poc.formio.pupper/amorphie.poc.formio.pupper.csproj",
+                        "/property:GenerateFullPaths=true",
+                        "/consoleloggerparameters:NoSummary"
+                    ],
+                    "problemMatcher": "$msCompile"
+                },
+        {
+            "type": "docker-build",
+            "label": "form-io-pupper-docker-build: debug",
+            "dependsOn": [
+                "build-form-io-pupper"
+            ],
+            "dockerBuild": {
+                "tag": "webapi:dev",
+                "target": "base",
+                "dockerfile": "${workspaceFolder}/form-io/server-validation/amorphie.poc.formio.pupper/Dockerfile",
+                "context": "${workspaceFolder}",
+                "pull": true
+            },
+            "netCore": {
+                "appProject": "${workspaceFolder}/form-io/server-validation/amorphie.poc.formio.pupper/amorphie.poc.formio.pupper.csproj"
+            }
+        },
+        {
+            "type": "docker-run",
+            "label": "form-io-pupper-docker-run: debug",
+            "dependsOn": [
+                "form-io-pupper-docker-build: debug"
+            ],
+            "dockerRun": {},
+            "netCore": {
+                "appProject": "${workspaceFolder}/form-io/server-validation/amorphie.poc.formio.pupper/amorphie.poc.formio.pupper.csproj",
+                "enableDebugging": true
+            }
+        },
         {
             "label": "build-amorphie-poc-couchbase",
             "command": "dotnet",
