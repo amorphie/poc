@@ -73,6 +73,7 @@ plugins:                          # plugin list (sorted in alphabetical order)
   - cors
   # - dubbo-proxy
   - echo
+  # - custom-header
   # - error-log-logger
   # - example-plugin
   - fault-injection

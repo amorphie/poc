@@ -31,6 +31,7 @@ services:
     restart: always
     volumes:
       - ./config/config.yaml:/usr/local/apisix/conf/config.yaml:ro
+      # - ./custom-plugins:/opt/apisix/plugins:ro
     depends_on:
       - etcd
     ports:
@@ -57,13 +58,30 @@ services:
       - apisix
 
   httpbin:
-    image: kennethreitz/httpbin
+    image: kennethreitz/httpbin:latest
     container_name: httpbin
     ports:
       - '80:80'
     networks:
       - apisix
     
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    networks:
+      - apisix
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - '5501:8001'
+    restart: unless-stopped
+    networks:
+      - apisix
+      
 networks:
   apisix:
     driver: bridge
