@@ -1,0 +1,18 @@
+﻿version: "3"
+services:
+  minio:
+    image: minio/minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - 'minio_data:/data'
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_REGION_NAME: 'eu-central-1'
+    command: minio server --console-address ":9001" /data
+
+volumes:
+  minio_data:
+    driver: local

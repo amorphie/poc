@@ -1,0 +1,26 @@
+
+@hostname=localhost
+@port=8083
+@host={{hostname}}:{{port}}
+
+### Create Sink Connector
+POST http://{{host}}/connectors HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "redis-sink",
+  "config": {
+      "connector.class": "com.github.jcustenborder.kafka.connect.redis.RedisSinkConnector",
+      "redis.hosts": "redis:6379",
+      "redis.database": "0",
+      "redis.client.mode": "Standalone",
+      "task.max": "3",
+      "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+      "internal.key.converter": "org.apache.kafka.connect.storage.StringConverter",
+      "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+      "internal.value.converter": "org.apache.kafka.connect.storage.StringConverter",
+      "topics.regex": "cache.(.*)"
+  }
+}
+
+###

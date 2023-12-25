@@ -1,0 +1,110 @@
+PUT /apisix/admin/routes/secure HTTP/1.1
+Host: 127.0.0.1:9180
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+Content-Type: text/plain
+
+{
+    "uri":"/secure",
+    "plugins":{
+        "openid-connect":{
+            "client_id":"apisix-client",
+            "client_secret":"R2zSWWwRIy3dvWAPMGfoCCW2XnrrYHnX",
+            "discovery":"http://127.0.0.1:8080/realms/apisix/.well-known/openid-configuration",
+            "scope":"openid profile",
+            "bearer_only":false,
+            "realm":"apisix",
+            "introspection_endpoint_auth_method":"client_secret_post",
+            "redirect_uri":"http://127.0.0.1:9080/"
+        }
+    },
+    "upstream":{
+        "type":"roundrobin",
+        "nodes":{
+            "http://localhost:8180":1
+        }
+    }
+}
+
+###
+PUT /apisix/admin/routes/url_rewrite HTTP/1.1
+Host: 127.0.0.1:9180
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+Content-Type: text/plain
+
+{
+    "uri": "/ip",
+    "plugins": {
+
+        "proxy-rewrite": {
+            "uri": "/anything?param=$http_speakerId"
+        },
+        "serverless-pre-function": {
+            "functions": [
+                "return function(conf, ctx) local base64 = require(\"base64\") local cjson = require(\"cjson\") local core     = require(\"apisix.core\") local headers = ngx.req.get_headers() local userinfoHeader = headers[\"x-userinfo\"] local decodedData, decodeErr = ngx.decode_base64(userinfoHeader) if not decodeErr then local jsonData, parseErr = cjson.decode(decodedData) if not parseErr then if type(jsonData) == \"table\" then for key, value in pairs(jsonData) do core.request.set_header(ctx, key, value) end end end end end"],
+            "phase": "rewrite"
+        }
+    },
+    "upstream": {
+        "nodes": [
+            {
+                "host": "host.docker.internal",
+                "port": 80,
+                "weight": 1
+            }
+        ],
+        "type": "roundrobin"
+    },
+    "status": 1
+}
+###
+PUT /apisix/admin/plugin_configs/1 HTTP/1.1
+Host: 127.0.0.1:9180
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+Content-Type: text/plain
+
+{
+    "desc": "blah",
+    "plugins": {
+        "limit-count": {
+            "count": 2,
+            "time_window": 60,
+            "rejected_code": 503
+        }
+    }
+}
+###
+
+
+###
+PUT /apisix/admin/routes/url_rewrite1 HTTP/1.1
+Host: 127.0.0.1:9180
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+Content-Type: text/plain
+
+{
+  "uri": "/rewrite1",
+  "name": "local-rewrite1",
+  "plugin_config_id": 1,
+  "plugins": {
+    "proxy-rewrite": {
+      "uri": "/get"
+    }
+  },
+  "upstream": {
+    "nodes": [
+      {
+        "host": "host.docker.internal",
+        "port": 80,
+        "weight": 1
+      }
+    ],
+    "type": "roundrobin"
+  },
+  "status": 1
+}
+###
+
+GET http://127.0.0.1:9180/apisix/admin/plugin_configs/1 HTTP/1.1
+Host: 127.0.0.1:9180
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+Content-Type: text/plain

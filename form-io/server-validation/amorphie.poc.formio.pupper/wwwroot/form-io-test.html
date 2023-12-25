@@ -1,0 +1,47 @@
+﻿<html>
+<head>
+    <!--<link rel=stylesheet href=https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css>
+    <link rel=stylesheet href=https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css>  
+    <link rel=stylesheet href=https://cdn.form.io/formiojs/formio.full.min.css>-->
+    <script src=https://cdn.form.io/formiojs/formio.full.min.js></script>
+</head>
+<body>
+    <div id=formio></div>
+    <script>
+        var fr;
+        Formio.createForm(document.getElementById('formio'), {
+            "data": {},
+            "metadata": {},
+            "display": "form",
+            "components": [
+                {
+                    "label": "Text Field",
+                    "applyMaskOn": "change",
+                    "tableView": true,
+                    "validate": {
+                        "required": true,
+                        "minLength": 5,
+                        "maxLength": 10
+                    },
+                    "key": "textField",
+                    "type": "textfield",
+                    "input": true
+                }
+            ]
+        }).then(function (form) { fr = form; });
+
+
+        function onButtonClick() {
+            // fr.checkValidity()
+            fr.submit().then(
+                function (value) { return true; },
+                function (error) { return false; }
+            );
+        }
+        function dummy() {
+            return true;
+        }
+    </script>
+    <input id="clickMe" type="button" value="clickme" onclick="onButtonClick();" />
+</body>
+</html>
