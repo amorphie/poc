@@ -1,0 +1,94 @@
+
+PUT /apisix/admin/routes/dmz HTTP/1.1
+Host: 127.0.0.1:9180
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+Content-Type: text/plain
+
+{
+    "uri": "/dmz",
+    "plugins": {
+        "proxy-rewrite": {
+            "headers": {
+                "add": {
+                    "X-DMZ-ID": "1"
+                }
+            },
+            "uri": "/internal"
+        }
+    },
+    "upstream": {
+        "nodes": [
+            {
+                "host": "host.docker.internal",
+                "port": 9080,
+                "weight": 1
+            }
+        ],
+        "type": "roundrobin"
+    },
+    "status": 1
+}
+###
+
+PUT /apisix/admin/routes/internal HTTP/1.1
+Host: 127.0.0.1:9180
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+Content-Type: text/plain
+
+{
+    "uri": "/internal",
+    "plugins": {
+
+        "proxy-rewrite": {
+            "headers": {
+                "add": {
+                    "X-Internal-ID": "2"
+                }
+            },
+            "uri": "/fora"
+        }
+    },
+    "upstream": {
+        "nodes": [
+            {
+                "host": "host.docker.internal",
+                "port": 9080,
+                "weight": 1
+            }
+        ],
+        "type": "roundrobin"
+    },
+    "status": 1
+}
+###
+
+PUT /apisix/admin/routes/fora HTTP/1.1
+Host: 127.0.0.1:9180
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+Content-Type: text/plain
+
+{
+    "uri": "/fora",
+    "plugins": {
+        "proxy-rewrite": {
+            "headers": {
+                "add": {
+                    "X-Fora-ID": "3"
+                }
+            },
+            "uri": "/anything"
+        }
+    },
+    "upstream": {
+        "nodes": [
+            {
+                "host": "host.docker.internal",
+                "port": 8090,
+                "weight": 1
+            }
+        ],
+        "type": "roundrobin"
+    },
+    "status": 1
+}
+###

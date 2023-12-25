@@ -16,9 +16,13 @@
 #
 
 apisix:
+#  extra_lua_path: "/opt/?.lua"
   node_listen: 9080              # APISIX listening port
   enable_ipv6: false
 
+#plugins:
+#  - custom-header
+  
 deployment:
   admin:
     allow_admin:               # https://nginx.org/en/docs/http/ngx_http_access_module.html#allow

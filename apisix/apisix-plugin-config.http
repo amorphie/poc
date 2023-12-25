@@ -1,0 +1,57 @@
+
+GET http://127.0.0.1:9180/apisix/admin/plugin_configs/1 HTTP/1.1
+Host: 127.0.0.1:9180
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+Content-Type: text/plain
+
+###
+PUT /apisix/admin/plugin_configs/1 HTTP/1.1
+Host: 127.0.0.1:9180
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+Content-Type: text/plain
+
+{
+    "desc": "blah",
+    "plugins": {
+        "limit-count": {
+            "count": 2,
+            "time_window": 60,
+            "rejected_code": 503
+        },
+        "request-id": {
+      "header_name": "X-RequestId",
+      "include_in_response": true
+    }
+    }
+}
+###
+
+
+###
+PUT /apisix/admin/routes/url_rewrite1 HTTP/1.1
+Host: 127.0.0.1:9180
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+Content-Type: text/plain
+
+{
+  "uri": "/rewrite1",
+  "name": "local-rewrite1",
+  "plugin_config_id": 1,
+  "plugins": {
+    "proxy-rewrite": {
+      "uri": "/get"
+    }
+  },
+  "upstream": {
+    "nodes": [
+      {
+        "host": "host.docker.internal",
+        "port": 80,
+        "weight": 1
+      }
+    ],
+    "type": "roundrobin"
+  },
+  "status": 1
+}
+###
