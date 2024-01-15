@@ -10,9 +10,9 @@
     "strapi": "strapi"
   },
   "dependencies": {
-    "@strapi/plugin-i18n": "4.12.6",
-    "@strapi/plugin-users-permissions": "4.12.6",
-    "@strapi/strapi": "4.12.6",
+    "@strapi/plugin-i18n": "4.17.0",
+    "@strapi/plugin-users-permissions": "4.17.0",
+    "@strapi/strapi": "4.17.0",
     "pg": "8.8.0",
     "seed": "^0.4.4",
     "strapi-plugin-redis": "^1.0.1",
