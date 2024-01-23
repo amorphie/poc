@@ -8,20 +8,20 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace amorphie.poc.signalr_server.Hubs;
 
-    public class PrivateMessageHub: Hub
+    public class PrivateMessageHub : Hub
+{
+    public async Task SendMessage(HubMessage message)
     {
-        public async Task SendMessage(HubMessage message)
-        {
-            
-        }
-        /*
-        public async Task SendMessageToClient(HubMessage hubMessage) =>
-            await Clients.Client(connectionId).SendAsync("SendMessage", data);
-
-        public async Task SendMessageToUser(string data, string userId) =>
-            await Clients.User(userId).SendAsync("SendMessage", data);
-*/
 
     }
+    /*
+    public async Task SendMessageToClient(HubMessage hubMessage) =>
+        await Clients.Client(connectionId).SendAsync("SendMessage", data);
+
+    public async Task SendMessageToUser(string data, string userId) =>
+        await Clients.User(userId).SendAsync("SendMessage", data);
+*/
+
+}
 
 
