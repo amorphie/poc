@@ -41,31 +41,31 @@ void SignSample()
     Console.WriteLine("Signature Verified: " + isVerified);
 
     byte[] SignData(string originalData, AsymmetricAlgorithm privateKey)
-{
-    byte[] data = Encoding.UTF8.GetBytes(originalData);
-
-    using (RSA rsa = privateKey as RSA)
     {
-        using (SHA256 sha256 = SHA256.Create())
+        byte[] data = Encoding.UTF8.GetBytes(originalData);
+
+        using (RSA rsa = privateKey as RSA)
         {
-            byte[] hash = sha256.ComputeHash(data);
-            byte[] signature = rsa.SignHash(hash, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-            return signature;
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hash = sha256.ComputeHash(data);
+                byte[] signature = rsa.SignHash(hash, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                return signature;
+            }
         }
     }
-}
 
-bool VerifyData(byte[] data, byte[] signature, AsymmetricAlgorithm publicKey)
-{
-    using (RSA rsa = publicKey as RSA)
+    bool VerifyData(byte[] data, byte[] signature, AsymmetricAlgorithm publicKey)
     {
-        using (SHA256 sha256 = SHA256.Create())
+        using (RSA rsa = publicKey as RSA)
         {
-            byte[] hash = sha256.ComputeHash(data);
-            return rsa.VerifyHash(hash, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hash = sha256.ComputeHash(data);
+                return rsa.VerifyHash(hash, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            }
         }
     }
-}
 
 }
 
@@ -86,22 +86,22 @@ void SignJWS()
                 { "scope", "openid" }
             };
 
-        var privateKey = certificate.GetRSAPrivateKey();
-        var publicKey = certificate.GetRSAPublicKey();
+    var privateKey = certificate.GetRSAPrivateKey();
+    var publicKey = certificate.GetRSAPublicKey();
 
 
 
-        // Create JWS object
-        string jwsObject = JWT.Encode(payload, privateKey, JwsAlgorithm.RS256, extraHeaders: jwsHeader);
+    // Create JWS object
+    string jwsObject = JWT.Encode(payload, privateKey, JwsAlgorithm.RS256, extraHeaders: jwsHeader);
 
-        // Print the serialized JWS
-        Console.WriteLine("Serialized JWS: " + jwsObject);
+    // Print the serialized JWS
+    Console.WriteLine("Serialized JWS: " + jwsObject);
 
-        // Verify the JWS
-        var isValid = JWT.Decode(jwsObject, publicKey, JwsAlgorithm.RS256);
+    // Verify the JWS
+    var isValid = JWT.Decode(jwsObject, publicKey, JwsAlgorithm.RS256);
 
 
-        Console.WriteLine("JWS verification result: " + isValid);
+    Console.WriteLine("JWS verification result: " + isValid);
 }
 
 void EncryptSample()
@@ -139,10 +139,10 @@ void SaveSample()
 
     void SaveCertificateToPfxFile(X509Certificate2 certificate, string fileName, string password)
     {
-        string certBase64 = ExportPfxToPem(certificate,password);
+        string certBase64 = ExportPfxToPem(certificate, password);
         File.WriteAllText(fileName, certBase64);
     }
-    
+
 }
 
 void ExportPEMSample()
@@ -170,7 +170,7 @@ void WriteLoadCertificate()
     string originalMessage = "Hello, this is a secret message!";
 
     var pemCert = LoadSelfSignedCert(pem);
-    var pfxCert = LoadSelfSignedKey(pfx,certPassword);
+    var pfxCert = LoadSelfSignedKey(pfx, certPassword);
 
 
     byte[] encryptedMessage = EncryptWithCertificate(originalMessage, pemCert);
@@ -277,7 +277,7 @@ X509Certificate2 GenerateSelfSignedCertificate()
 
         request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.DataEncipherment | X509KeyUsageFlags.KeyEncipherment | X509KeyUsageFlags.DigitalSignature, false));
 
-        request.CertificateExtensions.Add(new X509EnhancedKeyUsageExtension(new OidCollection { new Oid("1.3.6.1.5.5.7.3.1"), new Oid("1.3.6.1.5.5.7.3.2")}, false));
+        request.CertificateExtensions.Add(new X509EnhancedKeyUsageExtension(new OidCollection { new Oid("1.3.6.1.5.5.7.3.1"), new Oid("1.3.6.1.5.5.7.3.2") }, false));
         var notBefore = DateTime.UtcNow;
         var notAfter = notBefore.AddYears(1);
         X509Certificate2 certificate = request.CreateSelfSigned(notBefore, notAfter);
