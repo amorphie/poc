@@ -1,12 +1,12 @@
 
-PUT /apisix/admin/routes/dmz HTTP/1.1
+PUT /apisix/admin/routes/workflow-public HTTP/1.1
 Host: 127.0.0.1:9180
 X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
 Content-Type: text/plain
 
 {
-    "name":"dmz",
-    "uri": "/dmz",
+    "name":"workflow-public-dmz",
+    "uri": "/workflow-public-dmz",
     "plugins": {
         "proxy-rewrite": {
             "headers": {
@@ -14,7 +14,7 @@ Content-Type: text/plain
                     "X-DMZ-ID": "1"
                 }
             },
-            "uri": "/internal"
+            "uri": "/workflow-public-internal"
         }
     },
     "upstream": {
@@ -31,14 +31,14 @@ Content-Type: text/plain
 }
 ###
 
-PUT /apisix/admin/routes/internal HTTP/1.1
+PUT /apisix/admin/routes/workflow-public-internal HTTP/1.1
 Host: 127.0.0.1:9180
 X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
 Content-Type: text/plain
 
 {
-    "name":"internal",
-    "uri": "/internal",
+    "name":"workflow-public-internal",
+    "uri": "/workflow-public-internal",
     "plugins": {
 
         "proxy-rewrite": {
