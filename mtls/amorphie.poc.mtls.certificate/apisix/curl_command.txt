@@ -1,0 +1,1 @@
+curl --resolve "test.com:9443:127.0.0.1" https://test.com:9443/anything -k --cert ./client-certificate.cer --key ./client-certificate-private-key.key 

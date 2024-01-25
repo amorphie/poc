@@ -1,0 +1,117 @@
+PUT /apisix/admin/ssls HTTP/1.1
+Host: 127.0.0.1:9180
+Content-Type: text/plain
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+
+{
+  "id": "quickstart-mtls-client-ssl",
+  "sni": "test.com",
+  "cert": "-----BEGIN CERTIFICATE-----
+MIICzTCCAbWgAwIBAgIQAJKzq3xGl7UXxTizyG66UTANBgkqhkiG9w0BAQsFADAN
+MQswCQYDVQQDDAJDQTAeFw0yNDAxMjUxNTA0MTRaFw0yNTAxMjQxNTA0MTRaMBMx
+ETAPBgNVBAMMCHRlc3QuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAyvX8V7rLp4Zc7BDRcSyfbEhj/lFnp5BrkGfiELKqn/Eyw2uxGWpRrcQ3MsU9
+Ugggcf4WNF40JJFABQmqVia+JPZn0mbqBU+5XNQffwUkFtDUTPuEZ7l9dCJw49W+
+SuVpkPyD9iTRC6lLbrfcaurhQyv3bKOwPjj9KUxV5Iw2l47z6njEz+F+Of17QkoC
+iktcpGIBdcOT6ljdNKnUO7yroLyNx1BNSe5ckIeb8gEusnE3OQxO0DKo+9i7Xkyx
+mnORlRr6vIk8ti0nVJN+adgYsfO4ml6mZ6OJBpZfH8hCsRFgZdZgOqUet9GrhGzk
+yKy1l6SxcncdIEJNj+YY/xTrEwIDAQABoyMwITAfBgNVHSMEGDAWgBSv4PTxtbvG
+jqVNhr3FKbMXwanXSDANBgkqhkiG9w0BAQsFAAOCAQEAdQ0wDbjCaHHHFEcrg+KP
+omY+iQ4uaTLcQU9U049CdbH7fYlyymkfMSrmtTQ14YPYyv0IL5jDtEgRNcrCaF6Y
+5bhqx3Fm8/cn9Uj4kjL+4W35VD8dmL6j99H7uJQQo69IewWuOhxfwWTzM+8YS4GQ
+HsHflRg6Z+czGgSBFxJTuqTYO+9+tNKBWUJDwP54uiqS0o2/NZc8Mc12bfE0WJLe
+wI1nJE2oa7G1c6DNVdeAxRSupQg2UpD4Thu0HE3CIdBZBMRelDpcp3+/H2TAAOQK
+aemom2EPNanDHOFxCM264WMKAkyVgpkgDBup8EWlibK5sKG3QoZx9y5ldtUW6FzC
+kw==
+-----END CERTIFICATE-----",
+  "key": "-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAyvX8V7rLp4Zc7BDRcSyfbEhj/lFnp5BrkGfiELKqn/Eyw2ux
+GWpRrcQ3MsU9Ugggcf4WNF40JJFABQmqVia+JPZn0mbqBU+5XNQffwUkFtDUTPuE
+Z7l9dCJw49W+SuVpkPyD9iTRC6lLbrfcaurhQyv3bKOwPjj9KUxV5Iw2l47z6njE
+z+F+Of17QkoCiktcpGIBdcOT6ljdNKnUO7yroLyNx1BNSe5ckIeb8gEusnE3OQxO
+0DKo+9i7XkyxmnORlRr6vIk8ti0nVJN+adgYsfO4ml6mZ6OJBpZfH8hCsRFgZdZg
+OqUet9GrhGzkyKy1l6SxcncdIEJNj+YY/xTrEwIDAQABAoIBAApRn1bGhHwr9KV7
+5WofnqtestbHRMHcMdvRrEi1DL+8/5u36fUk1qpDA5ttM8Tr7Npe1Los3/HMALlA
+2IwwxBIVBQpJeTRz7TSvBDrtA/y0+VZAo2ayo5I3/g1XXKlqKIfajssA7C/vl4o1
+httYvcMwhQ/c8qT3OMfUvbk098GUx9FefDW72xs3d5HUw034k8n+0O+n8ZDtiHrc
+FJC8+dosWai7DDUFGaIfVek9C3ilMCqUIwpw6kJR91cQO6+G5fmE/BHgVvqu7AhH
+lBJb+LwLGMex7US8qfEZKK4V9QT0YOH/bYHCQ24RjwkDP+DpRXDHahN0rmGKgIZY
+W+qIYaECgYEA8jQfI2LTRwbTRhV5R5AxeJt6qpuC98cgygDOf5bgh2VhRlMjBFKx
+dvhNtwiXBT1i5gMj1a3WnZomabUW90OZccHjyIFWx90oygCzS+KKTMvCVcBxNGAH
+h72ZbE8Kk87P92d6Me1PTKjmfUIHJqYzCl9JLszu+ozVAtQyIzhDGR8CgYEA1oWd
+vCVxuUTKuTlj2c54aTcb+TyHM0YEB35+QYbuYcMGKd4mJQD4xk6zl2wbbshKLs7u
+fsZ5L7RZYAarOKrcKQM86cpgy+Up9OYw/w6FzIM/dbDYeTNoee15lcEsFLD5+FSx
+p5p9rmIgkfEWsTb6Qaae5uuyZ42FGrnKhzm8S40CgYAkbaR1TQrb9vHV66rnEY/v
+ROtJN8SWAdQzrbVhSU8R7jSYQC7XGpzoeOYvblJQjnAOilBcdh3+bE30vjDrFbbB
+flkFMjbcLq5Q25QcCMGmVUswXJZqOztGtkSaHrVHj+aFnoGperjfndO06TZsILky
+iSxXpqkW9BGhsEquM2scHwKBgBkiuNO103hw3gwL9G4t6h/x7B4tAG56krhKEwMc
+i0v7LPq04+VMEtoxmItyiFhXsZGAf6NtH//98sb0oRVXt8o6beW659KcPGlMm4sX
+KYhIDKR+ny68Xk6DC88HPmICRpfZXKOVz4oiR0yyYgVLutD8c/v8u/+0LlduU5O6
+qRx1AoGBANyWvfLN449+xYxDbU8IiQwV08hqFnBCHT9LCW61Hus0Q0JaRPdyIqys
+ONDIWNsU75PT2MJojPHxItKdKUfnzgM5deV86k0KmkUbzyQIgRAg2LKAR+iFKRJn
+zSEJcD+AHbkPn+zG13h0BQ9YuR//xqIPB+GKgeDa/ycCVNBIFmHU
+-----END RSA PRIVATE KEY-----",
+  "client": {
+    "ca": "-----BEGIN CERTIFICATE-----
+MIICtzCCAZ+gAwIBAgIQAMnYfCu8MpybU2uAtjYj1zANBgkqhkiG9w0BAQsFADAN
+MQswCQYDVQQDDAJDQTAeFw0yNDAxMjUxNTA0MTRaFw0yNTAxMjQxNTA0MTRaMA0x
+CzAJBgNVBAMMAkNBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtQLv
+TJx9ao/fD00rUSrVfVmoTvrQidmRpl+SQUyX9xXkzjwfntsLikEqFtivrLAAo7Fv
+Wm0imQ8c1l3+yfHpive2InOFWd3gtAnfIUaB022bkiO+ZFyNb6CF3U7sxoCBJIFK
+80GpNStdq4N70+qH/5ir0cWnBkhFcfIPkvYP359T1Z/qHoL5nSa6utxjFQljQTpQ
+Xv425wHhoTmtRgOS8t1K5XxM9l79Ons0kppRZCNuPwFoTFgc8WYcU/JWPCt+ut6u
+wLtDm/kT0M6a1ACEfskZtdloCItPm2qsy1zfu8yzQrnN9O0EQ5EJoGmrPeOOGjHm
+NlNwNpesMjNYJvHd5QIDAQABoxMwETAPBgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3
+DQEBCwUAA4IBAQAhP63YwNO0QjiurKnezqjcD1kY45x/LChTMNM6mqEsTPtiWVwW
+txU/Cev1OLdpvuGA9vWpF1fRWnBwWMcadgDw1efJYS/MsZwoupb5B0m1E6CPitiU
+S9PIT5zQwGPeSEWOL3/1Emx1GR6xnAqOiofVfpTPRIazCwCC03AnrTQEVg8AmGqt
+9xsDEaKpVh0PUNfB+NTeTlAiuKYU8n3bvqoYrYXxAXuVNd51TPLWdSdPT1pTlL6t
+JykQRV4cR+7gCXMRkB6wI5ahOIqMCAQT0w9BQLTub4otM9cWkJ+vomJD7oPjrEjc
+Tc1NaFcA2CEfiTxB9BJHGGuljZm2kiJf99gT
+-----END CERTIFICATE-----"
+  }
+}
+###
+
+
+PUT /apisix/admin/routes HTTP/1.1
+Host: 127.0.0.1:9180
+Content-Type: text/plain
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+
+{
+  "id": "quickstart-ip",
+  "uri": "/ip",
+  "upstream": {
+    "nodes": {
+      "httpbin.org:80":1
+    },
+    "type": "roundrobin"
+  }
+}
+
+###
+PUT /apisix/admin/routes/1 HTTP/1.1
+Host: 127.0.0.1:9180
+Content-Type: text/plain
+X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
+
+
+{
+    "uri": "/anything",
+    "plugins": {
+        "proxy-rewrite": {
+            "headers": {
+                "X-Ssl-Client-Fingerprint": "$ssl_client_fingerprint",
+                "X-Ssl-Client-Serial": "$ssl_client_serial",
+                "X-Ssl-Client-S-DN": "$ssl_client_s_dn"
+            }
+        }
+    },
+    "upstream": {
+        "nodes": {
+            "httpbin.org":1
+        },
+        "type":"roundrobin"
+    }
+}

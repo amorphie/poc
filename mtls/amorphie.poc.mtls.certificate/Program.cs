@@ -24,28 +24,44 @@ B.X509Certificate caCert = GenerateCACertificate(
 );
 
 ExportPfxFile(caCert, caKeyPair, "1234", "ca");
-ExportCrtFile(caCert, "ca");
+ExportCerFile(caCert, "ca");
 // ExportCsrFile(caKeyPair, "ca");
 ExportKeyPairFile(caKeyPair, "ca");
 //----------------------------
 
 // Step 3: Create a Self-Signed Certificate using the CA Key Pair
-AsymmetricCipherKeyPair entityKeyPair = GenerateKeyPair();
-B.X509Certificate entityCert = GenerateSelfSignedCertificate(
-    "CN=Entity",            // Common Name for the entity
-    entityKeyPair,          // Entity key pair
+
+AsymmetricCipherKeyPair serverKeyPair = GenerateKeyPair();
+B.X509Certificate serverCert = GenerateSelfSignedCertificate(
+    "CN=test.com",            // Common Name for the entity
+    serverKeyPair,          // Entity key pair
     caKeyPair,              // CA key pair
     caCert,                 // CA certificate
     "SHA256withRSA",        // Signature algorithm
     365                     // Validity period in days
 );
 
-ExportPfxFile(entityCert, entityKeyPair, "1234", "entity");
-ExportCrtFile(entityCert, "entity");
-// ExportCsrFile(entityKeyPair, "entity");
-ExportKeyPairFile(entityKeyPair, "entity");
+ExportPfxFile(serverCert, serverKeyPair, "1234", "Server");
+ExportCerFile(serverCert, "Server");
+ExportKeyPairFile(serverKeyPair, "Server");
+
 //----------------------------
 
+// Step 3: Create a Self-Signed Certificate using the CA Key Pair
+AsymmetricCipherKeyPair clientKeyPair = GenerateKeyPair();
+B.X509Certificate clientCert = GenerateSelfSignedCertificate(
+    "CN=Client",            // Common Name for the entity
+    clientKeyPair,          // Entity key pair
+    caKeyPair,              // CA key pair
+    caCert,                 // CA certificate
+    "SHA256withRSA",        // Signature algorithm
+    365                     // Validity period in days
+);
+
+ExportPfxFile(clientCert, clientKeyPair, "1234", "Client");
+ExportCerFile(clientCert, "Client");
+ExportKeyPairFile(clientKeyPair, "Client");
+//----------------------------
 
 // Step 3: Load the key pair from files
 AsymmetricCipherKeyPair loadedKeyPair = LoadKeyPairFromFile("ca");
@@ -55,10 +71,10 @@ B.X509Certificate loadedCACert = LoadCACertificateFromFile("ca");
 X509Certificate2 ca_certificate = new X509Certificate2("ca-certificate.pfx", "1234");
 Console.WriteLine($"Ca - Has Private {ca_certificate.HasPrivateKey}");
 
-X509Certificate2 entity_pfx_certificateSign = new X509Certificate2("entity-certificate.pfx", "1234");
+X509Certificate2 entity_pfx_certificateSign = new X509Certificate2("server-certificate.pfx", "1234");
 Console.WriteLine($"entity_pfx_certificateSign - Has Private {entity_pfx_certificateSign.HasPrivateKey}");
 
-X509Certificate2 entity_crt_certificateVerify = new X509Certificate2("entity-certificate.crt");
+X509Certificate2 entity_crt_certificateVerify = new X509Certificate2("server-certificate.cer");
 Console.WriteLine($"entity_crt_certificateVerify - Has Private {entity_crt_certificateVerify.HasPrivateKey}");
 // SignSample(entity_pfx_certificateSign, entity_crt_certificateVerify);
 Sign(entity_pfx_certificateSign, entity_crt_certificateVerify);
@@ -140,23 +156,23 @@ void ExportPfxFile(B.X509Certificate certificate, AsymmetricCipherKeyPair keyPai
 void ExportKeyPairFile(AsymmetricCipherKeyPair keyPair, string fileNamePrefix)
 {
     // Save private key to file
-    using (var writer = new StreamWriter($"{fileNamePrefix}-private-key.key")) // or .pem
+    using (var writer = new StreamWriter($"{fileNamePrefix}-certificate-private-key.key")) // or .pem
     {
         var pemWriter = new PemWriter(writer);
         pemWriter.WriteObject(keyPair.Private);
     }
 
     // Save public key to file
-    using (var writer = new StreamWriter($"{fileNamePrefix}-public-key.key")) // or .pem
+    using (var writer = new StreamWriter($"{fileNamePrefix}-certificate-public-key.key")) // or .pem
     {
         var pemWriter = new PemWriter(writer);
         pemWriter.WriteObject(keyPair.Public);
     }
 }
 
-void ExportCrtFile(B.X509Certificate certificate, string fileNamePrefix)
+void ExportCerFile(B.X509Certificate certificate, string fileNamePrefix)
 {
-    using (var writer = new StreamWriter($"{fileNamePrefix}-certificate.crt")) // or .pem
+    using (var writer = new StreamWriter($"{fileNamePrefix}-certificate.cer")) // or .pem
     {
         var pemWriter = new PemWriter(writer);
         pemWriter.WriteObject(certificate);
@@ -167,7 +183,7 @@ void ExportCrtFile(B.X509Certificate certificate, string fileNamePrefix)
 AsymmetricCipherKeyPair LoadKeyPairFromFile(string fileNamePrefix)
 {
     // Load private key from file
-    using (var reader = new StreamReader($"{fileNamePrefix}-private-key.pem"))
+    using (var reader = new StreamReader($"{fileNamePrefix}-certificate-private-key.key"))
     {
         var pemReader = new PemReader(reader);
         var keyPair = (AsymmetricCipherKeyPair)pemReader.ReadObject();
@@ -178,7 +194,7 @@ AsymmetricCipherKeyPair LoadKeyPairFromFile(string fileNamePrefix)
 B.X509Certificate LoadCACertificateFromFile(string fileNamePrefix)
 {
     // Load CA certificate from file
-    using (var reader = new StreamReader($"{fileNamePrefix}-certificate.crt"))
+    using (var reader = new StreamReader($"{fileNamePrefix}-certificate.cer"))
     {
         var pemReader = new PemReader(reader);
         var certificate = (B.X509Certificate)pemReader.ReadObject();
