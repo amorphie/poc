@@ -265,7 +265,7 @@ void SignJWS(X509Certificate2 certificateSign, X509Certificate2 certificateVerif
     };
 
         var privateKey = certificateSign.GetRSAPrivateKey();
-       return JWT.Encode(payload, privateKey, JwsAlgorithm.RS256, extraHeaders: jwsHeader);
+        return JWT.Encode(payload, privateKey, JwsAlgorithm.RS256, extraHeaders: jwsHeader);
     }
 
     bool verifyJWS(string jws)
