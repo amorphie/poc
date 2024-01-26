@@ -15,6 +15,7 @@ using B = Org.BouncyCastle.X509; //Bouncy certificates
 // Step 1: Create a Key Pair for the CA
 AsymmetricCipherKeyPair caKeyPair = GenerateKeyPair();
 
+
 // Step 2: Create a CA Certificate
 B.X509Certificate caCert = GenerateCACertificate(
     "CN=CA",                // Common Name for the CA
@@ -58,6 +59,12 @@ B.X509Certificate clientCert = GenerateSelfSignedCertificate(
     365                     // Validity period in days
 );
 
+
+ BigInteger serialNumber = clientCert.SerialNumber;
+// clientCert.IssuerUniqueID;
+// clientCert.IssuerDN;
+ string thumbprint = DotNetUtilities.ToX509Certificate(clientCert).GetCertHashString();
+
 ExportPfxFile(clientCert, clientKeyPair, "1234", "Client");
 ExportCerFile(clientCert, "Client");
 ExportKeyPairFile(clientKeyPair, "Client");
@@ -67,6 +74,7 @@ ExportKeyPairFile(clientKeyPair, "Client");
 AsymmetricCipherKeyPair loadedKeyPair = LoadKeyPairFromFile("ca");
 // Step 4: Load the CA certificate from file
 B.X509Certificate loadedCACert = LoadCACertificateFromFile("ca");
+
 
 X509Certificate2 ca_certificate = new X509Certificate2("ca-certificate.pfx", "1234");
 Console.WriteLine($"Ca - Has Private {ca_certificate.HasPrivateKey}");
@@ -318,3 +326,12 @@ void EncryptDecrypt(X509Certificate2 publicCertificate, X509Certificate2 private
     }
 
 }
+
+string GetThumbprint(B.X509Certificate certificate)
+    {
+        if (certificate == null)
+            throw new ArgumentNullException(nameof(certificate));
+
+     return DotNetUtilities.ToX509Certificate(certificate).GetCertHashString();
+
+    }
