@@ -60,10 +60,10 @@ B.X509Certificate clientCert = GenerateSelfSignedCertificate(
 );
 
 
- BigInteger serialNumber = clientCert.SerialNumber;
+BigInteger serialNumber = clientCert.SerialNumber;
 // clientCert.IssuerUniqueID;
 // clientCert.IssuerDN;
- string thumbprint = DotNetUtilities.ToX509Certificate(clientCert).GetCertHashString();
+string thumbprint = DotNetUtilities.ToX509Certificate(clientCert).GetCertHashString();
 
 ExportPfxFile(clientCert, clientKeyPair, "1234", "Client");
 ExportCerFile(clientCert, "Client");
@@ -273,7 +273,7 @@ void SignJWS(X509Certificate2 certificateSign, X509Certificate2 certificateVerif
     };
 
         var privateKey = certificateSign.GetRSAPrivateKey();
-       return JWT.Encode(payload, privateKey, JwsAlgorithm.RS256, extraHeaders: jwsHeader);
+        return JWT.Encode(payload, privateKey, JwsAlgorithm.RS256, extraHeaders: jwsHeader);
     }
 
     bool verifyJWS(string jws)
@@ -328,10 +328,10 @@ void EncryptDecrypt(X509Certificate2 publicCertificate, X509Certificate2 private
 }
 
 string GetThumbprint(B.X509Certificate certificate)
-    {
-        if (certificate == null)
-            throw new ArgumentNullException(nameof(certificate));
+{
+    if (certificate == null)
+        throw new ArgumentNullException(nameof(certificate));
 
-     return DotNetUtilities.ToX509Certificate(certificate).GetCertHashString();
+    return DotNetUtilities.ToX509Certificate(certificate).GetCertHashString();
 
-    }
+}
